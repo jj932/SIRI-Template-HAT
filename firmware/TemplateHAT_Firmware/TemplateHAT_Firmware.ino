@@ -4,7 +4,7 @@
  * @author SIRI Electrical Team
  * @date 2025
  * 
- * Hardware: Teensy 4.1 with TJA1050 CAN transceiver
+ * Hardware: Teensy 4.1 with SN65HVD230 CAN transceiver
  * IDE: Arduino IDE with Teensyduino add-on
  * 
  * Required Libraries:
@@ -18,6 +18,7 @@
 #include "include/component_ctrl.h"
 #include "include/telemetry.h"
 #include "include/hardware_map.h"
+#include <FlexCAN_T4.h>
 
 // Global objects
 CANInterface canInterface;

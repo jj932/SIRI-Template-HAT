@@ -11,7 +11,8 @@
 #include <stdint.h>
 
 // CAN Network Configuration
-#define CAN_BAUDRATE 1000000  // 1 Mbps
+#define CAN_BAUDRATE 500000   // 500 kbps (matching Jetson configuration)
+// Alternative: #define CAN_BAUDRATE 1000000  // 1 Mbps
 #define CAN_MAX_NODES 32
 #define CAN_MAX_DATA_LENGTH 8
 

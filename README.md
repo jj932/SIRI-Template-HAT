@@ -39,7 +39,8 @@ TemplateHAT/
 │           └── can_protocol.cpp # CAN utility functions
 ├── docs/                     # Documentation
 │   ├── design_specs.md       # Design specifications
-│   └── api_reference.md      # API documentation
+│   ├── api_reference.md      # API documentation
+│   └── sn65hvd230_integration.md # CAN transceiver integration guide
 ├── hardware/                 # PCB design files (future)
 │   ├── schematic/           # KiCad schematic files
 │   ├── pcb/                 # PCB layout files
@@ -52,10 +53,11 @@ TemplateHAT/
 │   ├── hardware_tests/      # Hardware validation
 │   ├── integration_tests/   # System integration
 │   └── simulation/          # Virtual testing
-├── examples/                 # Usage examples (future)
-│   ├── basic_hat/           # Minimal HAT implementation
-│   ├── sensor_hat/          # Sensor-based HAT example
-│   └── actuator_hat/        # Actuator control example
+├── examples/                 # Usage examples
+│   ├── can_test/            # SN65HVD230 CAN communication test
+│   ├── basic_hat/           # Minimal HAT implementation (future)
+│   ├── sensor_hat/          # Sensor-based HAT example (future)
+│   └── actuator_hat/        # Actuator control example (future)
 └── tools/                    # Development tools (future)
     ├── address_generator.py # CAN address assignment
     ├── config_validator.py  # Configuration validation
@@ -66,16 +68,16 @@ TemplateHAT/
 
 ### Hardware Layer
 - **Schematic Design**: KiCad-based PCB design with standard VGA HAT connector
-- **Component Selection**: Standardized components (TJA1050 CAN transceiver for Teensy, SN65HVD230 for Jetson, etc.)
+- **CAN Transceiver**: SN65HVD230 CAN transceiver with FlexCAN_T4 driver implementation
 - **Power Management**: 5V/3.3V power distribution and monitoring
-- **Status Indicators**: LEDs for state indication and debugging
+- **Status Indicators**: LEDs for state indication and CAN communication activity
 
 ### Firmware Layer (Arduino IDE)
 - **Main Sketch**: TemplateHAT_Firmware.ino with setup() and loop()
-- **CAN Interface**: Implementation of SIRI CAN protocol using FlexCAN_T4
+- **CAN Interface**: Complete SN65HVD230 driver implementation using FlexCAN_T4
 - **State Machine**: Standardized safety states (POWER_OFF, IDLE, ARMED, etc.)
 - **Component Control**: Abstract interface for HAT-specific hardware
-- **Telemetry System**: Periodic status and sensor data reporting
+- **Telemetry System**: Periodic status and sensor data reporting with CAN transmission
 
 ### Software Integration
 - **ROS2 Node**: High-level interface for mission control

@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "hat_config.h"
+#include "can_protocol.h"
 
 // GPIO Pin Definitions (Teensy 4.1)
 #define PIN_CAN_TX 22
@@ -86,5 +87,28 @@ typedef struct {
 extern const CANConfig_t CAN_CONFIG;
 extern const StatusConfig_t STATUS_CONFIG;
 extern const ComponentConfig_t COMPONENT_CONFIGS[];
+
+// Hardware Configuration Definitions
+const CANConfig_t CAN_CONFIG = {
+    .txPin = PIN_CAN_TX,
+    .rxPin = PIN_CAN_RX,
+    .baudrate = CAN_BAUDRATE,
+    .nodeID = HAT_NODE_ID
+};
+
+const StatusConfig_t STATUS_CONFIG = {
+    .statusLED = PIN_LED_STATUS,
+    .errorLED = PIN_LED_ERROR,
+    .commLED = PIN_LED_COMM,
+    .testButton = PIN_BUTTON_TEST
+};
+
+// Example component configurations (customize per HAT)
+const ComponentConfig_t COMPONENT_CONFIGS[] = {
+    {PIN_DIGITAL_OUT_1, false, ADDR_COMPONENT_1, "Component 1"},
+    {PIN_DIGITAL_OUT_2, false, ADDR_COMPONENT_2, "Component 2"},
+    {PIN_DIGITAL_OUT_3, false, ADDR_COMPONENT_3, "Component 3"},
+    {PIN_DIGITAL_OUT_4, false, ADDR_COMPONENT_4, "Component 4"}
+};
 
 #endif // HARDWARE_MAP_H

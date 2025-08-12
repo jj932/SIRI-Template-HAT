@@ -5,9 +5,9 @@ This is the Arduino IDE version of the TemplateHAT firmware for SIRI rover HAT m
 
 ## Hardware Requirements
 - **Microcontroller**: Teensy 4.1
-- **CAN Transceiver**: TJA1050
+- **CAN Transceiver**: SN65HVD230
 - **Power Supply**: 5V from backplane
-- **Connections**: 40-pin HAT connector
+- **Connections**: VGA HAT connector
 
 ## Software Requirements
 - **Arduino IDE**: Version 1.8.19 or later

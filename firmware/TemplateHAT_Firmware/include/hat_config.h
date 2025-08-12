@@ -18,7 +18,7 @@
 
 // Hardware Configuration
 #define HAT_MCU_TYPE "Teensy 4.1"
-#define HAT_CAN_TRANSCEIVER "TJA1050"
+#define HAT_CAN_TRANSCEIVER "SN65HVD230"
 #define HAT_POWER_VOLTAGE_5V 5.0f
 #define HAT_POWER_VOLTAGE_3V3 3.3f
 

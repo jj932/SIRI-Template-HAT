@@ -9,8 +9,8 @@ This document outlines the design specifications for the TemplateHAT module, whi
 - **Operating Voltage**: 5V ±5% (from backplane)
 - **Logic Voltage**: 3.3V (internal regulation)
 - **Maximum Current**: 2A continuous
-- **CAN Bus**: TJA1050 transceiver, 1 Mbps
-- **Connector**: 40-pin GPIO header (Raspberry Pi compatible)
+- **CAN Bus**: SN65HVD230 transceiver, 1 Mbps
+- **Connector**: VGA connector (SIRI-Elec standard)
 
 ### Environmental Specifications
 - **Operating Temperature**: -20°C to +70°C
