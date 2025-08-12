@@ -26,6 +26,9 @@
 #define HAT_MAX_COMPONENTS 16
 #define HAT_COMPONENT_BASE_ADDR (HAT_BASE_ADDRESS + 0x10)
 
+// CAN Network Configuration
+#define CAN_BAUDRATE 500000   // 500 kbps (matching Jetson configuration)
+
 // Timing Configuration
 #define HAT_HEARTBEAT_INTERVAL_MS 1000
 #define HAT_TELEMETRY_INTERVAL_MS 100

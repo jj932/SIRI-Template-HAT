@@ -40,7 +40,8 @@ TemplateHAT/
 ├── docs/                     # Documentation
 │   ├── design_specs.md       # Design specifications
 │   ├── api_reference.md      # API documentation
-│   └── sn65hvd230_integration.md # CAN transceiver integration guide
+│   ├── sn65hvd230_integration.md # CAN transceiver integration guide
+│   └── pin_reference.md      # Pin assignment reference and naming conventions
 ├── hardware/                 # PCB design files (future)
 │   ├── schematic/           # KiCad schematic files
 │   ├── pcb/                 # PCB layout files
@@ -138,7 +139,8 @@ TemplateHAT/
 2. **Customize configuration**:
    - Edit `firmware/include/hat_config.h` with your HAT details
    - Update CAN addresses in `firmware/include/hardware_map.h`
-   - Modify component definitions as needed
+   - Modify component definitions and pin assignments as needed
+   - Note: HAT-specific pins use `HAT_` prefix to avoid conflicts with Teensy core definitions
 
 3. **Open firmware in Arduino IDE**:
    ```bash

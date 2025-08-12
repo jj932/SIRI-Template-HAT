@@ -13,11 +13,12 @@
  */
 
 #include "include/hat_config.h"
-#include "include/can_interface.h"
-#include "include/state_machine.h"
-#include "include/component_ctrl.h"
-#include "include/telemetry.h"
 #include "include/hardware_map.h"
+#include "include/can_protocol.h"
+#include "include/state_machine.h"
+#include "include/telemetry.h"
+#include "include/can_interface.h"
+#include "include/component_ctrl.h"
 #include <FlexCAN_T4.h>
 
 // Global objects

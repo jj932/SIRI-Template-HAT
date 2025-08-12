@@ -5,9 +5,9 @@
  * @date 2025
  */
 
-#include "component_ctrl.h"
-#include "hat_config.h"
-#include "hardware_map.h"
+#include "../include/component_ctrl.h"
+#include "../include/hat_config.h"
+#include "../include/hardware_map.h"
 
 ComponentController::ComponentController() {
     // Constructor implementation

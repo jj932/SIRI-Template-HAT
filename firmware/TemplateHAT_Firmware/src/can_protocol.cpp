@@ -5,7 +5,7 @@
  * @date 2025
  */
 
-#include "can_protocol.h"
+#include "../include/can_protocol.h"
 
 uint32_t buildCANID(uint8_t priority, uint8_t sourceID, uint8_t targetID, uint8_t msgType) {
     // Build CAN ID from components

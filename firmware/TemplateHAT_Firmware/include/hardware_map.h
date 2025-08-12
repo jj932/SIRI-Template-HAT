@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 #include "hat_config.h"
-#include "can_protocol.h"
 
 // GPIO Pin Definitions (Teensy 4.1)
 #define PIN_CAN_TX 22
@@ -20,32 +19,36 @@
 #define PIN_LED_COMM 11
 #define PIN_BUTTON_TEST 10
 
-// I2C Pins
-#define PIN_I2C_SDA 18
-#define PIN_I2C_SCL 19
+// I2C Pins (HAT-specific, avoiding conflicts with Teensy core definitions)
+#define HAT_I2C_SDA 18
+#define HAT_I2C_SCL 19
 
-// SPI Pins
-#define PIN_SPI_MOSI 26
-#define PIN_SPI_MISO 1
-#define PIN_SPI_SCK 27
-#define PIN_SPI_CS 0
+// SPI Pins (HAT-specific, avoiding conflicts with Teensy core definitions)
+#define HAT_SPI_MOSI 26
+#define HAT_SPI_MISO 1
+#define HAT_SPI_SCK 27
+#define HAT_SPI_CS 0
 
-// Analog Input Pins
-#define PIN_ANALOG_VOLTAGE 14
-#define PIN_ANALOG_CURRENT 15
-#define PIN_ANALOG_TEMP 16
+// Analog Input Pins (HAT-specific)
+#define HAT_ANALOG_VOLTAGE 14
+#define HAT_ANALOG_CURRENT 15
+#define HAT_ANALOG_TEMP 16
 
-// Digital I/O Pins
-#define PIN_DIGITAL_OUT_1 2
-#define PIN_DIGITAL_OUT_2 3
-#define PIN_DIGITAL_IN_1 4
-#define PIN_DIGITAL_IN_2 5
+// Digital I/O Pins (HAT-specific)
+#define HAT_DIGITAL_OUT_1 2
+#define HAT_DIGITAL_OUT_2 3
+#define HAT_DIGITAL_IN_1 4
+#define HAT_DIGITAL_IN_2 5
 
-// PWM Output Pins
-#define PIN_PWM_OUT_1 6
-#define PIN_PWM_OUT_2 7
-#define PIN_PWM_OUT_3 8
-#define PIN_PWM_OUT_4 9
+// PWM Output Pins (HAT-specific)
+#define HAT_PWM_OUT_1 6
+#define HAT_PWM_OUT_2 7
+#define HAT_PWM_OUT_3 8
+#define HAT_PWM_OUT_4 9
+
+// Additional Digital Output Pins (HAT-specific)
+#define HAT_DIGITAL_OUT_3 20
+#define HAT_DIGITAL_OUT_4 21
 
 // CAN Address Mappings
 #define ADDR_STATE_QUERY (HAT_BASE_ADDRESS + 0xF0)
@@ -83,32 +86,27 @@ typedef struct {
     uint8_t testButton;
 } StatusConfig_t;
 
-// Hardware Configuration Constants
-extern const CANConfig_t CAN_CONFIG;
-extern const StatusConfig_t STATUS_CONFIG;
-extern const ComponentConfig_t COMPONENT_CONFIGS[];
-
-// Hardware Configuration Definitions
-const CANConfig_t CAN_CONFIG = {
-    .txPin = PIN_CAN_TX,
-    .rxPin = PIN_CAN_RX,
-    .baudrate = CAN_BAUDRATE,
-    .nodeID = HAT_NODE_ID
+// Hardware Configuration Constants (defined inline for Arduino IDE)
+static const CANConfig_t CAN_CONFIG = {
+    PIN_CAN_TX,     // txPin
+    PIN_CAN_RX,     // rxPin
+    CAN_BAUDRATE,   // baudrate
+    HAT_NODE_ID     // nodeID
 };
 
-const StatusConfig_t STATUS_CONFIG = {
-    .statusLED = PIN_LED_STATUS,
-    .errorLED = PIN_LED_ERROR,
-    .commLED = PIN_LED_COMM,
-    .testButton = PIN_BUTTON_TEST
+static const StatusConfig_t STATUS_CONFIG = {
+    PIN_LED_STATUS,  // statusLED
+    PIN_LED_ERROR,   // errorLED
+    PIN_LED_COMM,    // commLED
+    PIN_BUTTON_TEST  // testButton
 };
 
 // Example component configurations (customize per HAT)
-const ComponentConfig_t COMPONENT_CONFIGS[] = {
-    {PIN_DIGITAL_OUT_1, false, ADDR_COMPONENT_1, "Component 1"},
-    {PIN_DIGITAL_OUT_2, false, ADDR_COMPONENT_2, "Component 2"},
-    {PIN_DIGITAL_OUT_3, false, ADDR_COMPONENT_3, "Component 3"},
-    {PIN_DIGITAL_OUT_4, false, ADDR_COMPONENT_4, "Component 4"}
+static const ComponentConfig_t COMPONENT_CONFIGS[] = {
+    {HAT_DIGITAL_OUT_1, false, ADDR_COMPONENT_1, "Component 1"},
+    {HAT_DIGITAL_OUT_2, false, ADDR_COMPONENT_2, "Component 2"},
+    {HAT_DIGITAL_OUT_3, false, ADDR_COMPONENT_3, "Component 3"},
+    {HAT_DIGITAL_OUT_4, false, ADDR_COMPONENT_4, "Component 4"}
 };
 
 #endif // HARDWARE_MAP_H

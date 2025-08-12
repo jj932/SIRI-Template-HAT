@@ -9,10 +9,20 @@ The TemplateHAT firmware includes a complete driver implementation for the SN65H
 ### Teensy 4.1 to SN65HVD230
 ```
 Teensy 4.1    SN65HVD230    Function
-Pin 22    ->  TXD           CAN TX Data
-Pin 23    ->  RXD           CAN RX Data
+Pin 22    ->  TXD           CAN TX Data (PIN_CAN_TX)
+Pin 23    ->  RXD           CAN RX Data (PIN_CAN_RX)
 3.3V      ->  VCC           Power Supply
 GND       ->  GND           Ground
+```
+
+### HAT-Specific Pin Definitions
+All HAT-specific pins use the `HAT_` prefix to avoid conflicts with Teensy core definitions:
+```
+I2C:     HAT_I2C_SDA (18), HAT_I2C_SCL (19)
+SPI:     HAT_SPI_MOSI (26), HAT_SPI_MISO (1), HAT_SPI_SCK (27), HAT_SPI_CS (0)
+Analog:  HAT_ANALOG_VOLTAGE (14), HAT_ANALOG_CURRENT (15), HAT_ANALOG_TEMP (16)
+Digital: HAT_DIGITAL_OUT_1-4, HAT_DIGITAL_IN_1-2
+PWM:     HAT_PWM_OUT_1-4
 ```
 
 ### SN65HVD230 to CAN Bus

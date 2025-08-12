@@ -5,11 +5,11 @@
  * @date 2025
  */
 
-#include "can_interface.h"
-#include "can_protocol.h"
-#include "hat_config.h"
-#include "hardware_map.h"
-#include "telemetry.h"
+#include "../include/can_interface.h"
+#include "../include/can_protocol.h"
+#include "../include/hat_config.h"
+#include "../include/hardware_map.h"
+#include "../include/telemetry.h"
 #include <FlexCAN_T4.h>
 
 // FlexCAN instance for SN65HVD230 transceiver
@@ -221,12 +221,12 @@ bool CANInterface::sendTelemetry(const TelemetryData_t& data) {
     message.data[1] = (data.sensorId >> 8) & 0xFF;
     message.data[2] = (uint8_t)data.dataType;
     
-    // Pack float value as bytes
+    // Pack float value as bytes (assuming float data type)
     union {
         float f;
         uint8_t bytes[4];
     } valueUnion;
-    valueUnion.f = data.value;
+    valueUnion.f = data.data.floatValue;
     
     message.data[3] = valueUnion.bytes[0];
     message.data[4] = valueUnion.bytes[1];

@@ -5,8 +5,8 @@
  * @date 2025
  */
 
-#include "telemetry.h"
-#include "hat_config.h"
+#include "../include/telemetry.h"
+#include "../include/hat_config.h"
 
 TelemetryManager::TelemetryManager() {
     // Constructor implementation

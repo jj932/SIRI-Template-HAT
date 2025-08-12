@@ -20,7 +20,7 @@ typedef enum {
 } TelemetryDataType_t;
 
 // Telemetry Data Structure
-typedef struct {
+typedef struct TelemetryData_t {
     uint16_t sensorId;
     TelemetryDataType_t dataType;
     uint32_t timestamp;

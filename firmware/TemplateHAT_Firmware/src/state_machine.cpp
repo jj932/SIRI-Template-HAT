@@ -5,8 +5,8 @@
  * @date 2025
  */
 
-#include "state_machine.h"
-#include "hat_config.h"
+#include "../include/state_machine.h"
+#include "../include/hat_config.h"
 
 HATStateMachine::HATStateMachine() {
     // Constructor implementation
