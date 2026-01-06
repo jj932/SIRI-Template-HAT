@@ -4,7 +4,7 @@
  * @author SIRI Electrical Team
  * @date 2025
  * 
- * Hardware: Teensy 4.1 with SN65HVD230 CAN transceiver
+ * Hardware: Teensy 4.1 with TJA1050 CAN transceiver
  * IDE: Arduino IDE with Teensyduino add-on
  * 
  * Required Libraries:
@@ -12,20 +12,21 @@
  * - ArduinoJson (install via Library Manager)
  */
 
-#include "include/hat_config.h"
-#include "include/hardware_map.h"
-#include "include/can_protocol.h"
-#include "include/state_machine.h"
-#include "include/telemetry.h"
-#include "include/can_interface.h"
-#include "include/component_ctrl.h"
-#include <FlexCAN_T4.h>
+#include "hat_config.h"
+#include <array>
+#include "ACAN2517FD.h"
+#include "SPI.h"
+#include "message_construction.h"
+#include "state_machine.h"
+#include "component_ctrl.h"
+#include "hardware_map.h"
+#include "motor_control.h"
+#include "Arduino.h"
 
 // Global objects
 CANInterface canInterface;
 HATStateMachine stateMachine;
 ComponentController componentController;
-TelemetryManager telemetryManager;
 
 // Timing variables
 unsigned long lastHeartbeat = 0;
@@ -35,10 +36,10 @@ unsigned long lastStateCheck = 0;
 void setup() {
     // Initialize serial communication
     Serial.begin(HAT_SERIAL_BAUD_RATE);
-    delay(1000);
+    delay(10000);
     
     #if HAT_DEBUG_ENABLED
-    Serial.println("=== SIRI TemplateHAT Starting ===");
+    Serial.println("=== SIRI DriveHAT Starting ===");
     Serial.print("HAT Name: ");
     Serial.println(HAT_NAME);
     Serial.print("Version: ");
@@ -62,23 +63,17 @@ void loop() {
     unsigned long currentTime = millis();
     
     // Process CAN messages
-    processCANMessages();
+    std::array<CANFDMessage, 8> msg = processCANMessages();
     
     // Update state machine
     updateStateMachine(currentTime);
     
-    // Send heartbeat
-    sendHeartbeat(currentTime);
-    
-    // Send telemetry
-    sendTelemetry(currentTime);
-    
     // Update components
-    updateComponents();
+    updateComponents(msg);
     
     // Handle status indicators
     updateStatusIndicators();
-    
+
     // Small delay to prevent overwhelming the system
     delay(1);
 }
@@ -86,17 +81,9 @@ void loop() {
 void initializeHardware() {
     // Initialize GPIO pins
     pinMode(PIN_LED_STATUS, OUTPUT);
-    pinMode(PIN_LED_ERROR, OUTPUT);
-    pinMode(PIN_LED_COMM, OUTPUT);
-    pinMode(PIN_BUTTON_TEST, INPUT_PULLUP);
     
     // Initialize status LEDs
     digitalWrite(PIN_LED_STATUS, LOW);
-    digitalWrite(PIN_LED_ERROR, LOW);
-    digitalWrite(PIN_LED_COMM, LOW);
-    
-    // Initialize other hardware pins
-    initializeComponentPins();
 }
 
 void initializeSubsystems() {
@@ -127,21 +114,47 @@ void initializeSubsystems() {
         handleInitializationError();
         return;
     }
-    
-    // Initialize telemetry manager
-    if (!telemetryManager.initialize()) {
-        #if HAT_DEBUG_ENABLED
-        Serial.println("ERROR: Telemetry manager initialization failed");
-        #endif
-        handleInitializationError();
-        return;
-    }
 }
 
-void processCANMessages() {
-    // Process incoming CAN messages
-    canInterface.processMessages();
+
+std::array<CANFDMessage, 8> processCANMessages() {
+    std::array<CANFDMessage, 8> messages;
+
+    // --- Node ID mapping (example) ---
+    static constexpr uint8_t driveNode[4] = {
+        NODE_DRIVE_FL,
+        NODE_DRIVE_FR,
+        NODE_DRIVE_RL,
+        NODE_DRIVE_RR
+    };
+
+    static constexpr uint8_t steerNode[4] = {
+        NODE_STEER_FL,
+        NODE_STEER_FR,
+        NODE_STEER_RL,
+        NODE_STEER_RR
+    };
+
+    // --- DRIVE VELOCITY MESSAGES (index 0–3) ---
+    for (int i = 0; i < 4; ++i) {
+        messages[i] = buildVelocityMsg(
+            driveNode[i],       // CAN node ID
+            angular_vel[i],     // float velocity (rad/s)
+            0.0f                // torque FF
+        );
+    }
+
+    // --- STEERING POSITION MESSAGES (index 4–7) ---
+    for (int i = 0; i < 4; ++i) {
+        messages[4 + i] = buildPositionMsg(
+            steerNode[i],        // CAN node ID
+            steering_angle[i]    // float position (radians)
+        );
+    }
+
+    return messages;
 }
+
 
 void updateStateMachine(unsigned long currentTime) {
     // Check for state timeouts
@@ -151,23 +164,9 @@ void updateStateMachine(unsigned long currentTime) {
     }
 }
 
-void sendHeartbeat(unsigned long currentTime) {
-    if (currentTime - lastHeartbeat >= HAT_HEARTBEAT_INTERVAL_MS) {
-        canInterface.sendHeartbeat();
-        lastHeartbeat = currentTime;
-    }
-}
-
-void sendTelemetry(unsigned long currentTime) {
-    if (currentTime - lastTelemetry >= HAT_TELEMETRY_INTERVAL_MS) {
-        telemetryManager.sendTelemetry();
-        lastTelemetry = currentTime;
-    }
-}
-
-void updateComponents() {
+void updateComponents(std::array<CANFDMessage, 8> msg) {
     // Update component states based on current HAT state
-    componentController.update();
+    componentController.update(msg);
 }
 
 void updateStatusIndicators() {
@@ -175,15 +174,16 @@ void updateStatusIndicators() {
     updateStatusLEDs();
 }
 
-void initializeComponentPins() {
-    // Initialize component-specific pins
-    // To be implemented based on specific HAT requirements
-}
-
 void handleInitializationError() {
     // Handle initialization errors
-    digitalWrite(PIN_LED_ERROR, HIGH);
+    digitalWrite(PIN_LED_STATUS, HIGH);
     // Additional error handling logic
+    while (1) {
+        digitalWrite(PIN_LED_STATUS, HIGH);
+        delay(200);
+        digitalWrite(PIN_LED_STATUS, LOW);
+        delay(200);
+    }
 }
 
 void updateStatusLEDs() {
@@ -207,12 +207,10 @@ void updateStatusLEDs() {
             break;
         case STATE_LOCKED:
             digitalWrite(PIN_LED_STATUS, LOW);
-            digitalWrite(PIN_LED_ERROR, HIGH);
             break;
         case STATE_EMERGENCY_STOP:
             // Rapid flash
             digitalWrite(PIN_LED_STATUS, (millis() / 50) % 2);
-            digitalWrite(PIN_LED_ERROR, HIGH);
             break;
     }
 }

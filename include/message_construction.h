@@ -1,16 +1,19 @@
 /**
- * @file can_protocol.h
+ * @file message_construction.h
  * @brief CAN message definitions and protocol constants
  * @author SIRI Electrical Team
  * @date 2025
  */
 
-#ifndef CAN_PROTOCOL_H
-#define CAN_PROTOCOL_H
+#ifndef MESSAGE_CONSTRUCTION_H
+#define MESSAGE_CONSTRUCTION_H
 
 #include <stdint.h>
+#include "ACAN2517FD.h"
 
 // CAN Network Configuration
+#define CAN_BAUDRATE 1000000  // 1 Mbps
+#define CAN_FD_BAUDRATE 2000000
 #define CAN_MAX_NODES 32
 #define CAN_MAX_DATA_LENGTH 8
 
@@ -77,16 +80,9 @@
 #define MSG_TYPE_EMERGENCY_COMM 0xF3
 #define MSG_TYPE_SYSTEM_SHUTDOWN 0xFF
 
-// CAN Message Structure
-typedef struct {
-    uint32_t id;           // Extended CAN ID
-    uint8_t data[8];       // Data payload (0-8 bytes)
-    uint8_t length;        // Data length (0-8)
-    uint32_t timestamp;    // Message timestamp
-} CANMessage_t;
-
 // Function prototypes
-uint32_t buildCANID(uint8_t priority, uint8_t sourceID, uint8_t targetID, uint8_t msgType);
-void parseCANID(uint32_t canID, uint8_t* priority, uint8_t* sourceID, uint8_t* targetID, uint8_t* msgType);
+void floatToBytes(float f, uint8_t *out);
+CANFDMessage buildVelocityMsg(uint8_t node_id, float vel, float torque_ff = 0.0f);
+CANFDMessage buildPositionMsg(uint8_t node_id, float pos, float vel_ff = 0.0f);
 
-#endif // CAN_PROTOCOL_H
+#endif // MESSAGE_CONSTRUCTION_H

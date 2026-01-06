@@ -5,8 +5,9 @@
  * @date 2025
  */
 
-#include "../include/state_machine.h"
-#include "../include/hat_config.h"
+#include "state_machine.h"
+#include "hat_config.h"
+#include "Arduino.h"
 
 HATStateMachine::HATStateMachine() {
     // Constructor implementation
@@ -18,7 +19,7 @@ HATStateMachine::~HATStateMachine() {
 
 bool HATStateMachine::initialize() {
     // Initialize state machine
-    return false; // Placeholder
+    return true; // Placeholder
 }
 
 HAT_State_t HATStateMachine::getCurrentState() {

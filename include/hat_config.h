@@ -18,16 +18,13 @@
 
 // Hardware Configuration
 #define HAT_MCU_TYPE "Teensy 4.1"
-#define HAT_CAN_TRANSCEIVER "SN65HVD230"
+#define HAT_CAN_TRANSCEIVER "TJA1050"
 #define HAT_POWER_VOLTAGE_5V 5.0f
 #define HAT_POWER_VOLTAGE_3V3 3.3f
 
 // Component Configuration
 #define HAT_MAX_COMPONENTS 16
 #define HAT_COMPONENT_BASE_ADDR (HAT_BASE_ADDRESS + 0x10)
-
-// CAN Network Configuration
-#define CAN_BAUDRATE 500000   // 500 kbps (matching Jetson configuration)
 
 // Timing Configuration
 #define HAT_HEARTBEAT_INTERVAL_MS 1000
